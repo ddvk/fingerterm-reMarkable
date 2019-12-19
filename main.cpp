@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     bool ret = keyLoader.loadLayout(util.keyboardLayout());
     if(!ret) {
         // on failure, try to load the default one (english) directly from resources
-        //startupErrorMsg = "There was an error loading the keyboard layout.<br>\nUsing the default one instead.";
+        startupErrorMsg = "There was an error loading the keyboard layout.<br>\nUsing the default one instead.";
         util.setKeyboardLayout("english");
         ret = keyLoader.loadLayout(":/data/english.layout");
         if(!ret)

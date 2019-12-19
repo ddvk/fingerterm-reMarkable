@@ -113,7 +113,6 @@ signals:
     void selectionChanged();
     void scrollBackBufferAdjusted(bool reset);
     void selectionFinished();
-    void menuPressed();
 
 private:
     Q_DISABLE_COPY(Terminal)

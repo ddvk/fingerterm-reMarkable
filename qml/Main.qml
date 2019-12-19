@@ -48,16 +48,27 @@ Item {
         rotation: 0
         focus: true
         Keys.onPressed: {
-            if (event.modifiers & Qt.MetaModifier){
+            if (event.modifiers & Qt.ControlModifier){
                 console.log("mod"+ event.modifiers)
                 switch(event.key){
                     case Qt.Key_Left:
                         rotation = (rotation - 90) % 360
-                        event.accepted = true
+                        event.accepted=true
                         break;
                     case Qt.Key_Right:
                         rotation = (rotation + 90) % 360
+                        event.accepted=true
                         break
+                    case Qt.Key_K:
+                        if (util.keyboardMode !== Util.KeyboardOff) {
+                            util.keyboardMode = Util.KeyboardOff
+                        } else {
+                            util.keyboardMode = Util.KeyboardMove
+                        }
+                        window.setTextRenderAttributes()
+                        event.accepted=true
+                        break
+
                 }
             }
             if (!event.accepted)
@@ -110,9 +121,6 @@ Item {
             Keyboard {
                 id: vkb
                 property int mainHeight: vkb.visible ? vkb.height : 0
-
-                property int vil:1
-
                 property bool visibleSetting: true
                 active:true
 
@@ -220,7 +228,7 @@ Item {
                 property int duration
                 property int cutAfter: height
 
-                height: parent.height- (vkb.visible ? vkb.mainHeight : 0)
+                height: parent.height- (vkb.visible ? vkb.height : 0)
                 width: parent.width
                 fontPointSize: util.fontSize
                 opacity: (util.keyboardMode == Util.KeyboardFade && vkb.active) ? 0.3
@@ -326,7 +334,6 @@ Item {
             Connections {
                 target: term
                 onDisplayBufferChanged: window.displayBufferChanged()
-                onMenuPressed: vkb.visible = !vkb.visible
             }
 
             function vkbKeypress(key,modifiers) {

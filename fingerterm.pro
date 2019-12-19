@@ -3,6 +3,9 @@ QT = core gui qml quick
 CONFIG += link_pkgconfig
 linux-oe-g++ {
     LIBS += -lqsgepaper
+        isEmpty(DEFAULT_FONT) {
+                DEFAULT_FONT = NotoMono
+        }
 }
 
 enable-feedback {
@@ -14,9 +17,6 @@ enable-nemonotifications {
     PKGCONFIG += nemonotifications-qt5
 }
 DEFINES += DEFAULT_FONTFAMILY=\\\"$$DEFAULT_FONT\\\"
-isEmpty(DEFAULT_FONT) {
-    DEFAULT_FONT = NotoMono
-}
 
 TEMPLATE = app
 TARGET = fingerterm

@@ -282,19 +282,15 @@ void TextRender::drawTextFragment(QPainter* painter, int x, int y, QString text,
 
 void TextRender::redraw()
 {
-//    EPFrameBuffer::framebuffer()->fill(Qt::black);
-#ifdef aaa__arm__
-    QPainter painter(EPFrameBuffer::framebuffer());
     const QRect rect(0, 0, width(), height());
-    QImage &buffer = m_buffer;
-    if (buffer.size() != rect.size()) {
-        buffer = QImage();
-    }
-    //painter.fillRect(rect, Qt::black);
+    //TODO: does not respect rotation
+#ifdef __arm__
+    QPainter painter(EPFrameBuffer::framebuffer());
+    painter.fillRect(rect, Qt::white);
     paint(&painter);
     EPFrameBuffer::sendUpdate(rect, EPFrameBuffer::Grayscale, EPFrameBuffer::PartialUpdate, false);
 #else
-    update();
+    update(rect);
 #endif
 }
 

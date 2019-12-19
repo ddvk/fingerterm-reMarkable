@@ -50,7 +50,7 @@ bool KeyLoader::loadLayout(QString layout)
     else { // load from file
         QFile f(iUtil->configPath() + "/" + layout + ".layout");
         if (!f.exists()) // fallback to installation directory
-            f.setFileName(QStringLiteral(DEPLOYMENT_PATH) + "/data/" + layout + ".layout");
+            f.setFileName(":/data/" + layout + ".layout");
         ret = loadLayoutInternal(f);
     }
 
@@ -200,13 +200,9 @@ const QStringList KeyLoader::availableLayouts()
     }
 
     // Add also layouts from installation path.
-    QDir dataDir(QStringLiteral(DEPLOYMENT_PATH) + "/data");
-    results = dataDir.entryList(filter, QDir::Files|QDir::Readable, QDir::Name);
-    foreach(QString s, results) {
-        QString layout = s.left(s.lastIndexOf('.'));
-        if (!ret.contains(layout))
-            ret << layout;
-    }
+    ret << "english";
+    ret << "german";
+    ret << "french";
 
     return ret;
 }
