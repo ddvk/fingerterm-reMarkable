@@ -45,17 +45,30 @@ Item {
         width: portrait ? root.width : root.height
         height: portrait ? root.height : root.width
         anchors.centerIn: parent
-        rotation: Screen.angleBetween(orientation, Screen.primaryOrientation)
+        rotation: 0
         focus: true
         Keys.onPressed: {
-            term.keyPress(event.key,event.modifiers,event.text);
+            if (event.modifiers & Qt.MetaModifier){
+                console.log("mod"+ event.modifiers)
+                switch(event.key){
+                    case Qt.Key_Left:
+                        rotation = (rotation - 90) % 360
+                        event.accepted = true
+                        break;
+                    case Qt.Key_Right:
+                        rotation = (rotation + 90) % 360
+                        break
+                }
+            }
+            if (!event.accepted)
+                term.keyPress(event.key,event.modifiers,event.text);
         }
 
         Rectangle {
             id: window
 
             property string fgcolor: "black"
-            property string bgcolor: "#000000"
+            property string bgcolor: "white"
             property int fontSize: 14*pixelRatio
 
             property int fadeOutTime: 80
@@ -96,11 +109,12 @@ Item {
 
             Keyboard {
                 id: vkb
-                property int mainHeight:vkb.height
+                property int mainHeight: vkb.visible ? vkb.height : 0
 
                 property int vil:1
 
                 property bool visibleSetting: true
+                active:true
 
                 y: parent.height-vkb.height
                 visible: page.activeFocus && visibleSetting
@@ -186,14 +200,14 @@ Item {
                     id: menuImg
 
                     anchors.centerIn: parent
-                    source: "icons/menu.png"
+                    source: "qrc:/icons/menu.png"
                     scale: window.pixelRatio
                 }
             }
 
             Image {
                 // terminal buffer scroll indicator
-                source: "icons/scroll-indicator.png"
+                source: "qrc:/icons/scroll-indicator.png"
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: parent.bottom
                 visible: textrender.showBufferScrollIndicator
@@ -206,7 +220,7 @@ Item {
                 property int duration
                 property int cutAfter: height
 
-                height: parent.height-vkb.mainHeight
+                height: parent.height- (vkb.visible ? vkb.mainHeight : 0)
                 width: parent.width
                 fontPointSize: util.fontSize
                 opacity: (util.keyboardMode == Util.KeyboardFade && vkb.active) ? 0.3
@@ -312,6 +326,7 @@ Item {
             Connections {
                 target: term
                 onDisplayBufferChanged: window.displayBufferChanged()
+                onMenuPressed: vkb.visible = !vkb.visible
             }
 
             function vkbKeypress(key,modifiers) {
@@ -332,7 +347,7 @@ Item {
 
             function sleepVKB()
             {
-                textrender.duration = window.fadeInTime;
+                //textrender.duration = window.fadeInTime;
                 vkb.active = false;
                 setTextRenderAttributes();
             }

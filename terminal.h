@@ -57,8 +57,8 @@ class Terminal : public QObject
     Q_PROPERTY(int columns READ columns NOTIFY termSizeChanged)
 
 public:
-    static const int defaultFgColor = 7;
-    static const int defaultBgColor = 0;
+    static const int defaultFgColor = 0;
+    static const int defaultBgColor = 7;
 
     explicit Terminal(QObject *parent = 0);
     virtual ~Terminal() {}
@@ -113,6 +113,7 @@ signals:
     void selectionChanged();
     void scrollBackBufferAdjusted(bool reset);
     void selectionFinished();
+    void menuPressed();
 
 private:
     Q_DISABLE_COPY(Terminal)

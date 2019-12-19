@@ -40,15 +40,19 @@ extern "C" {
 #include "version.h"
 #include "keyloader.h"
 
+#ifdef __arm__
 #include <QtPlugin>
 Q_IMPORT_PLUGIN(QsgEpaperPlugin)
+#endif
 
 int main(int argc, char *argv[])
 {
+#ifdef __arm__
     qputenv("QMLSCENE_DEVICE", "epaper");
     qputenv("QT_QPA_PLATFORM", "epaper:enable_fonts");
     qputenv("QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS", "rotate=180");
-
+#endif
+    //todo:qt settings
     QString settings_path(QDir::homePath() + "/.config/FingerTerm");
     QDir dir;
 
@@ -141,7 +145,7 @@ int main(int argc, char *argv[])
     bool ret = keyLoader.loadLayout(util.keyboardLayout());
     if(!ret) {
         // on failure, try to load the default one (english) directly from resources
-        startupErrorMsg = "There was an error loading the keyboard layout.<br>\nUsing the default one instead.";
+        //startupErrorMsg = "There was an error loading the keyboard layout.<br>\nUsing the default one instead.";
         util.setKeyboardLayout("english");
         ret = keyLoader.loadLayout(":/data/english.layout");
         if(!ret)
@@ -161,8 +165,8 @@ int main(int argc, char *argv[])
     QObject::connect(view.engine(),SIGNAL(quit()),&app,SLOT(quit()));
 
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-    view.engine()->addImportPath(QStringLiteral(DEPLOYMENT_PATH));
-    view.setSource(QUrl::fromLocalFile(QStringLiteral(DEPLOYMENT_PATH) + QDir::separator() + QStringLiteral("Main.qml")));
+    //todo: qrc
+    view.setSource(QUrl("qrc:/qml/Main.qml"));
 
     QObject *root = view.rootObject();
     if(!root)

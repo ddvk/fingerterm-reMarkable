@@ -27,10 +27,10 @@ Item {
     property Key currentStickyPressed
     property Key currentKeyPressed
 
-    property string keyFgColor: "#ffffff"
-    property string keyBgColor: "#202020"
+    property string keyFgColor: "white"
+    property string keyBgColor: "black"
     property string keyHilightBgColor: "#ffffff"
-    property string keyBorderColor: "#303030"
+    property string keyBorderColor: "black"
 
     property int feedbackDuration: 150
 
@@ -98,7 +98,7 @@ Item {
                             && currentKeyPressed.currentLabel !== " ")
                            ? currentKeyPressed : null
 
-        visible: _key || visualFeedbackDelay.running
+        visible: false
         radius: window.radiusSmall
         color: keyFgColor
 
@@ -120,7 +120,7 @@ Item {
                 var mappedCoord = keyboard.mapFromItem(_key, 0, 0);
                 visualKeyFeedbackRect.x = mappedCoord.x - (visualKeyFeedbackRect.width-_key.width)/2
                 visualKeyFeedbackRect.y = mappedCoord.y - _key.height*1.5
-                visualFeedbackDelay.restart()
+                //visualFeedbackDelay.restart()
             }
         }
     }
@@ -130,7 +130,7 @@ Item {
         onKeyboardLayoutChanged: {
             var ret = keyLoader.loadLayout(util.keyboardLayout)
             if (!ret) {
-                showErrorMessage("There was an error loading the keyboard layout.<br>\nUsing the default one instead.");
+                //showErrorMessage("There was an error loading the keyboard layout.<br>\nUsing the default one instead.");
                 util.keyboardLayout = "english"
                 ret = keyLoader.loadLayout(":/data/english.layout"); //try the default as a fallback (load from resources to ensure it will succeed)
                 if (!ret) {

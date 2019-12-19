@@ -290,6 +290,12 @@ void Terminal::keyPress(int key, int modifiers, const QString& text)
                 toWrite += QString(1,ch_ESC);
         }
 
+        if (key == Qt::Key_Super_L) {
+            qDebug() << "menu key";
+            emit menuPressed();
+            return;
+        }
+
         if (!toWrite.isEmpty()) {
             if(iPtyIFace)
                 iPtyIFace->writeTerm(toWrite);
@@ -1321,7 +1327,7 @@ QString Terminal::getUserMenuXml()
         return QString();
 
     QString ret;
-    QFile f( iUtil->configPath()+"/menu.xml" );
+    QFile f(":/menu.xml" );
     if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
         ret = f.readAll();
         f.close();

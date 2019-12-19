@@ -1,16 +1,15 @@
-# fingerterm
+# Fork of a fork of fingerterm
 
-fingerterm is a terminal emulator designed for touch-based interaction,
-specifically for (but not limited to) use on the Nokia N9 and Jolla's
-Jolla device.
+# How to build
+```
+source /usr/local/oecore-x86_64/environment-setup-cortexa9hf-neon-oe-linux-gnueabi
+qmake
+make
+arm-oe-linux-gnueabi-strip fingerterm
+scp fingerterm root@remarkable:
+```
 
-## Modifications
-
-I have made some modifications to the source code to allow it to work better on the reMarkable.
-These include:
-* Disabling the visual bell in code
-* Keeping the virtual keyboard on screen at all times (except when the menu is open)
-* Reducing the text area to fit above the keyboard rather than overlapping, to reduce redraw
-* Adjusting the font and UI sizes to fit more comfortably on the screen.
-
-Note that Landscape mode doesn't seem to work - this was true when I downloaded the repo originally from https://github.com/reMarkable/fingerterm .
+# Mods
+white background
+Windows Key hides/shows keyboard
+Widows Key+Left/Right rotates the screen

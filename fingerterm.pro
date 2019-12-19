@@ -1,9 +1,9 @@
 QT = core gui qml quick
 
 CONFIG += link_pkgconfig
-LIBS += -lqsgepaper
-#        LIBS += -L/home/sandsmark/src/qsgepaper/build-qsgepaper-ZG-Release/ -lfreetype -lz #-lbfd
-#        TARGETDEPS += /home/sandsmark/src/qsgepaper/build-qsgepaper-ZG-Release/libqsgepaper.a
+linux-oe-g++ {
+    LIBS += -lqsgepaper
+}
 
 enable-feedback {
     QT += feedback
@@ -86,9 +86,3 @@ INSTALLS += userdata
 target.path = /usr/bin
 INSTALLS += target
 
-contains(MEEGO_EDITION,nemo) {
-    desktopfile.extra = cp $${TARGET}.desktop.nemo $${TARGET}.desktop
-    desktopfile.path = /usr/share/applications
-    desktopfile.files = $${TARGET}.desktop
-    INSTALLS += desktopfile
-}
