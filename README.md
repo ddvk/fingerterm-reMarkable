@@ -11,5 +11,7 @@ scp fingerterm root@remarkable:
 
 # Mods
 white background
-Windows Key hides/shows keyboard
-Widows Key+Left/Right rotates the screen
+
+Ctrl-K hides/shows keyboard
+
+Ctrl-Left/Right rotates the screen (bug with the framebuffer)
