@@ -77,7 +77,6 @@ int Util::windowOrientation()
 
 void Util::setWindowOrientation(int orientation)
 {
-    iWindow->reportContentOrientationChange(static_cast<Qt::ScreenOrientation>(orientation));
 }
 
 void Util::setTerm(Terminal *term)

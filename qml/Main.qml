@@ -21,8 +21,9 @@ import QtQuick 2.0
 import FingerTerm 1.0
 import QtQuick.Window 2.0
 
-Item {
+Window {
     id: root
+    visible: true
 
     width: 1404
     height: 1872

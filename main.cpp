@@ -52,18 +52,18 @@ int main(int argc, char *argv[])
     qputenv("QT_QPA_PLATFORM", "epaper:enable_fonts");
     qputenv("QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS", "rotate=180");
 #endif
-    //todo:qt settings
-    QString settings_path(QDir::homePath() + "/.config/FingerTerm");
+    QCoreApplication::setApplicationName("FingerTerm");
     QDir dir;
 
+    QString settings_path = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     if (!dir.exists(settings_path)) {
         if (!dir.mkdir(settings_path))
             qWarning() << "Could not create fingerterm settings path" << settings_path;
     }
 
+
     QSettings *settings = new QSettings(settings_path + "/settings.ini", QSettings::IniFormat);
 
-    QCoreApplication::setApplicationName("Fingerterm");
 
     // fork the child process before creating QGuiApplication
     int socketM;
@@ -108,29 +108,9 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    QScreen* sc = app.primaryScreen();
-    if(sc){
-        sc->setOrientationUpdateMask(Qt::PrimaryOrientation
-                                     | Qt::LandscapeOrientation
-                                     | Qt::PortraitOrientation
-                                     | Qt::InvertedLandscapeOrientation
-                                     | Qt::InvertedPortraitOrientation);
-    }
-
     qmlRegisterType<TextRender>("FingerTerm", 1, 0, "TextRender");
     qmlRegisterUncreatableType<Util>("FingerTerm", 1, 0, "Util", "Util is created by app");
-    QQuickView view;
-
-    bool fullscreen = !app.arguments().contains("-nofs");
-    QSize screenSize = QGuiApplication::primaryScreen()->size();
-
-    if (fullscreen) {
-        view.setWidth(screenSize.width());
-        view.setHeight(screenSize.height());
-    } else {
-        view.setWidth(screenSize.width() / 2);
-        view.setHeight(screenSize.height() / 2);
-    }
+    QQmlApplicationEngine engine;
 
     Terminal term;
     Util util(settings); // takes ownership
@@ -152,31 +132,19 @@ int main(int argc, char *argv[])
             qFatal("failure loading keyboard layout");
     }
 
-    QQmlContext *context = view.rootContext();
-    context->setContextProperty( "term", &term );
-    context->setContextProperty( "util", &util );
-    context->setContextProperty( "keyLoader", &keyLoader );
-    context->setContextProperty( "startupErrorMessage", startupErrorMsg);
+    engine.rootContext()->setContextProperty( "term", &term );
+    engine.rootContext()->setContextProperty( "util", &util );
+    engine.rootContext()->setContextProperty( "keyLoader", &keyLoader );
+    engine.rootContext()->setContextProperty( "startupErrorMessage", startupErrorMsg);
+    engine.load(QUrl("qrc:/qml/Main.qml"));
 
-    term.setWindow(&view);
-    util.setWindow(&view);
+    QQuickView *view = (QQuickView*) engine.rootObjects().first();
+    term.setWindow(view);
+    util.setWindow(view);
     util.setTerm(&term);
 
-    QObject::connect(view.engine(),SIGNAL(quit()),&app,SLOT(quit()));
-
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
-    //todo: qrc
-    view.setSource(QUrl("qrc:/qml/Main.qml"));
-
-    QObject *root = view.rootObject();
-    if(!root)
+    if(engine.rootObjects().isEmpty())
         qFatal("no root object - qml error");
-
-    if (fullscreen) {
-        view.showFullScreen();
-    } else {
-        view.show();
-    }
 
     PtyIFace ptyiface(pid, socketM, &term, util.charset());
 
