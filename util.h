@@ -52,7 +52,6 @@ class Util : public QObject
 public:
     enum KeyboardMode {
         KeyboardOff,
-        KeyboardFade,
         KeyboardMove
     };
 

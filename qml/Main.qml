@@ -28,19 +28,12 @@ Window {
     width: 1404
     height: 1872
 
-    Binding {
-        target: util
-        property: "windowOrientation"
-        value: page.orientation
-    }
+    property int row:60
+    property int col:80
 
     Item {
         id: page
 
-        property int orientation: forceOrientation ? forcedOrientation : Screen.orientation
-        property bool forceOrientation: util.orientationMode != Util.OrientationAuto
-        property int forcedOrientation: util.orientationMode == Util.OrientationLandscape ? Qt.LandscapeOrientation
-                                                                                          : Qt.PortraitOrientation
         property bool portrait: rotation % 180 == 0
 
         width: portrait ? root.width : root.height
@@ -113,11 +106,6 @@ Window {
 
             anchors.fill: parent
             color: bgcolor
-
-            Lineview {
-                id: lineView
-                show: (util.keyboardMode == Util.KeyboardFade) && vkb.active
-            }
 
             Keyboard {
                 id: vkb
@@ -396,10 +384,6 @@ Window {
 
             function displayBufferChanged()
             {
-                lineView.lines = term.printableLinesFromCursor(util.extraLinesFromCursor);
-                lineView.cursorX = textrender.cursorPixelPos().x;
-                lineView.cursorWidth = textrender.cursorPixelSize().width;
-                lineView.cursorHeight = textrender.cursorPixelSize().height;
                 setTextRenderAttributes();
             }
 

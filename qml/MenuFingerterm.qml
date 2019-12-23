@@ -319,17 +319,6 @@ Item {
                                         height: window.buttonHeightSmall
                                     }
                                     Button {
-                                        text: "Fade"
-                                        highlighted: util.keyboardMode == Util.KeyboardFade
-                                        onClicked: {
-                                            util.keyboardMode = Util.KeyboardFade
-                                            window.setTextRenderAttributes();
-                                            menuWin.showing = false;
-                                        }
-                                        width: window.buttonWidthSmall
-                                        height: window.buttonHeightSmall
-                                    }
-                                    Button {
                                         text: "Move"
                                         highlighted: util.keyboardMode == Util.KeyboardMove
                                         onClicked: {
